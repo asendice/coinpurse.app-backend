@@ -11,3 +11,6 @@ exports.createJWT = (email, userId, duration) => {
         expiresIn: duration
     });
 };
+
+
+
