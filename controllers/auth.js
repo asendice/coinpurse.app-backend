@@ -4,6 +4,7 @@ const Favorites = require("../models/Favorites");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 require("dotenv").config();
+const mongo = require("mongodb");
 const { createJWT } = require("../utils/auth");
 const emailRegexp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 exports.signup = (req, res, next) => {
@@ -79,7 +80,7 @@ exports.signin = (req, res) => {
     errors.push({ name: "required" });
   }
   if (!password) {
-    errors.push({ passowrd: "required" });
+    errors.push({ password: "required" });
   }
   if (errors.length > 0) {
     return res.status(422).json({ errors: errors });
@@ -167,9 +168,7 @@ exports.postTransactions = (req, res) => {
 };
 
 exports.getTransactions = (req, res) => {
-  console.log(req.query);
   const { userId } = req.query;
-  console.log(userId);
   Transactions.find({ userId: userId }).then((trans) => {
     if (!trans) {
       return res.status(404).json({
@@ -206,18 +205,35 @@ exports.postFavorites = (req, res) => {
 };
 
 exports.getFavorites = (req, res) => {
-  console.log(req.query);
   const { userId } = req.query;
-  console.log(userId);
-  Favorites.find({ userId: userId }).then((trans) => {
-    if (!trans) {
+  Favorites.find({ userId: userId }).then((favs) => {
+    if (!favs) {
       return res.status(404).json({
         errors: [{ user: `${userId} does not have favorites` }],
       });
     } else {
       return res.status(200).json({
         success: true,
-        message: trans,
+        message: favs,
+      });
+    }
+  });
+};
+
+exports.delFavorites = (req, res) => {
+  const { id } = req.query;
+  console.log(id);
+  Favorites.find({ id: id });
+  Favorites.deleteOne({ _id:  mongo.ObjectId(id) }).then((fav) => {
+    console.log("fav", fav);
+    if (!fav) {
+      return res.status(404).json({
+        errors: [{ fav: `${id} does not exist.` }],
+      });
+    } else {
+      return res.status(200).json({
+        success: true,
+        message: `${id} has been deleted`,
       });
     }
   });
