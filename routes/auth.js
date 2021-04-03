@@ -9,6 +9,7 @@ const {
   postFavorites,
   getFavorites,
   delFavorites,
+  getModalInfo
 } = require("../controllers/auth");
 
 router.post("/signup", signup);
@@ -18,5 +19,6 @@ router.get("/transactions", getTransactions);
 router.post("/favorites", postFavorites);
 router.get("/favorites", getFavorites);
 router.delete("/favorites", delFavorites);
+router.get("/modalInfo", getModalInfo)
 
 module.exports = router;

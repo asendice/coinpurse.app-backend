@@ -1,11 +1,13 @@
 const User = require("../models/User");
 const Transactions = require("../models/Transactions");
 const Favorites = require("../models/Favorites");
+const ModalInfo = require("../models/ModalInfo");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 require("dotenv").config();
 const mongo = require("mongodb");
 const { createJWT } = require("../utils/auth");
+const { UserInfo } = require("git");
 const emailRegexp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 exports.signup = (req, res, next) => {
   const { name, email, password, password_confirmation, skill } = req.body;
@@ -234,6 +236,21 @@ exports.delFavorites = (req, res) => {
       return res.status(200).json({
         success: true,
         message: `${id} has been deleted`,
+      });
+    }
+  });
+};
+
+exports.getModalInfo = (req, res) => {
+  ModalInfo.find().then((info) => {
+    if (!info) {
+      return res.status(404).json({
+        errors: [{ user: `Modal Info cannot be found.` }],
+      });
+    } else {
+      return res.status(200).json({
+        success: true,
+        message: info,
       });
     }
   });
