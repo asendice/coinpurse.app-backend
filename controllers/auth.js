@@ -7,7 +7,6 @@ const bcrypt = require("bcrypt");
 require("dotenv").config();
 const mongo = require("mongodb");
 const { createJWT } = require("../utils/auth");
-const { UserInfo } = require("git");
 const emailRegexp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 exports.signup = (req, res, next) => {
   const { name, email, password, password_confirmation, skill } = req.body;
